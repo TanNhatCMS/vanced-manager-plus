@@ -1,0 +1,108 @@
+<resources>
+    <string name="app_name">ReVanced Manager Plus</string>
+    
+    <!-- Settings Dialog -->
+    <string name="settings">Einstellungen</string>
+    <string name="theme">Design</string>
+    <string name="language">Sprache</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_system">System</string>
+    <string name="apply">Anwenden</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="restart_app">App neu starten</string>
+    <string name="restart_later">Später</string>
+    <string name="select_language">Sprache auswählen</string>
+    <string name="tap_to_change">Zum Ändern tippen</string>
+    
+    <!-- Main Screen -->
+    <string name="confirm">Bestätigen</string>
+    <string name="retry">Wiederholen</string>
+    <string name="loading_apps_message">Apps werden geladen...</string>
+    <string name="error_prefix">Fehler: %1$s</string>
+    <string name="revanced_manager_by">ReVanced Manager von vanced.to</string>
+    <string name="search_apps">Apps suchen…</string>
+    <string name="no_apps_found">Keine Apps für „%1$s" gefunden</string>
+    <string name="no_apps_available">Keine Apps verfügbar</string>
+    
+    <!-- App Card Actions -->
+    <string name="download">Herunterladen</string>
+    <string name="update">Aktualisieren</string>
+    <string name="open">Öffnen</string>
+    <string name="uninstall">Deinstallieren</string>
+    <string name="downloading">Wird heruntergeladen</string>
+    <string name="installing">Wird installiert</string>
+    <string name="uninstalling">Wird deinstalliert</string>
+    <string name="unknown">Unbekannt</string>
+    <string name="installed_version">Installiert: v%1$s</string>
+    <string name="latest_version">Neueste: v%1$s</string>
+    <string name="downloading_progress">Lädt herunter %1$d%%</string>
+    <string name="compact_mode">Kompakter Modus</string>
+    <string name="read_more">Mehr lesen</string>
+    <string name="show_less">Weniger anzeigen</string>
+    <string name="reinstall">Neu installieren</string>
+    <string name="reinstall_started">Neuinstallation gestartet</string>
+    <string name="reinstall_completed">Neuinstallation erfolgreich abgeschlossen</string>
+    <string name="reinstall_failed">Neuinstallation fehlgeschlagen</string>
+    
+    <!-- Toast Messages -->
+    <string name="download_starting">Download wird gestartet...</string>
+    <string name="download_completed_installing">Download abgeschlossen, Installation wird gestartet...</string>
+    <string name="download_failed">Download fehlgeschlagen: %1$s</string>
+    <string name="download_failed_memory">Download aufgrund von unzureichendem Speicher fehlgeschlagen. Schließen Sie andere Apps und versuchen Sie es erneut.</string>
+    <string name="download_failed_storage">Download aufgrund von unzureichendem Speicherplatz fehlgeschlagen. Geben Sie Speicherplatz frei und versuchen Sie es erneut.</string>
+    <string name="insufficient_storage_error">Unzureichender Speicherplatz. Verfügbar: %1$d MB. Geben Sie Speicherplatz frei und versuchen Sie es erneut.</string>
+    <string name="download_cancelled">Download abgebrochen</string>
+    <string name="installation_started">Installation gestartet</string>
+    <string name="installation_completed">Installation erfolgreich abgeschlossen</string>
+    <string name="installation_failed_start">Installation konnte nicht gestartet werden</string>
+    <string name="installation_failed_apk_not_found">Installation fehlgeschlagen und APK-Datei nicht gefunden</string>
+    <string name="installation_pending_user_action">Warten auf Benutzerbestätigung zur Installation</string>
+    <string name="uninstallation_started">Deinstallation gestartet</string>
+    <string name="uninstallation_completed">Deinstallation erfolgreich abgeschlossen</string>
+    <string name="uninstallation_failed">Deinstallation fehlgeschlagen: %1$s</string>
+    <string name="failed_start_uninstallation">Deinstallation konnte nicht gestartet werden</string>
+    <string name="failed_open_app">App konnte nicht geöffnet werden</string>
+    <string name="failed_open_app_error">App konnte nicht geöffnet werden: %1$s</string>
+    <string name="old_version_uninstalled">Alte Version deinstalliert, Installation wird wiederholt...</string>
+    <string name="failed_uninstall_old_version">Alte Version konnte nicht deinstalliert werden</string>
+    <string name="failed_uninstall_old_version_error">Alte Version konnte nicht deinstalliert werden: %1$s</string>
+    <string name="app_not_installed_proceeding">App nicht installiert, Installation wird fortgesetzt...</string>
+    <string name="installation_cancelled_by_user">Installation vom Benutzer abgebrochen</string>
+    <string name="app_status_updated">App-Status aktualisiert</string>
+    <string name="apps_updated">%1$d Apps aktualisiert</string>
+    <string name="configuration_saved">Konfiguration gespeichert</string>
+    <string name="error_applying_language">Sprache konnte nicht angewendet werden</string>
+    
+    <!-- Dialog Titles -->
+    <string name="installation_failed_title">Installation fehlgeschlagen</string>
+    <string name="uninstall_required_title">Deinstallation erforderlich</string>
+    <string name="language_changed_title">Sprache geändert</string>
+    <string name="reinstall_confirmation_title">App neu installieren</string>
+    
+    <!-- Dialog Messages -->
+    <string name="installation_failed_retry_message">Installation fehlgeschlagen: %1$s\n\nMöchten Sie es erneut versuchen? Dies deinstalliert zuerst die alte Version, falls vorhanden.</string>
+    <string name="uninstall_required_message">Um die Installation von %1$s zu wiederholen, muss die alte Version zuerst deinstalliert werden. Fortfahren?</string>
+    <string name="language_changed_message">Die Sprache wurde auf %1$s geändert.\n\nApp jetzt neu starten, um die Änderungen anzuwenden?</string>
+    <string name="reinstall_confirmation_message">Dies deinstalliert die aktuelle Version von %1$s und lädt die neueste Version herunter und installiert sie.\n\nMöchten Sie fortfahren?</string>
+    
+    <!-- Auto-install and Background Download -->
+    <string name="download_completed_ready_to_install">%1$s Download abgeschlossen und bereit zur Installation</string>
+    <string name="auto_install_enabled">Automatische Installation aktiviert</string>
+    <string name="auto_install_disabled">Automatische Installation deaktiviert</string>
+    <string name="pending_downloads_found">%1$d ausstehende Downloads gefunden</string>
+    <string name="background_download_completed">Hintergrund-Download abgeschlossen</string>
+    
+    <!-- Concurrent Downloads Dialog -->
+    <string name="downloads_complete_title">Downloads abgeschlossen</string>
+    <string name="downloads_complete_summary">%1$d abgeschlossen, %2$d fehlgeschlagen</string>
+    <string name="successfully_downloaded">Erfolgreich heruntergeladen (%1$d)</string>
+    <string name="failed_downloads">Fehlgeschlagene Downloads (%1$d)</string>
+    <string name="install_all_button">Alle installieren (%1$d)</string>
+    <string name="install_button">Installieren</string>
+    <string name="close_button">Schließen</string>
+    <string name="installing_multiple_apps">%1$d Apps werden installiert...</string>
+    <string name="installing_single_app">%1$s wird installiert...</string>
+    <string name="downloads_in_progress">Downloads laufen</string>
+    <string name="concurrent_downloads_active">%1$d aktive Downloads</string>
+</resources>
