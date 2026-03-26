@@ -117,4 +117,12 @@
     <string name="installing_single_app">Memasang %1$s</string>
     <string name="downloads_in_progress">Muat turun sedang berlangsung</string>
     <string name="concurrent_downloads_active">%1$d muat turun serentak aktif</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Tapis</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_installed">Dipasang</string>
+    <string name="filter_not_installed">Belum dipasang</string>
+    <string name="filter_updates">Kemas kini</string>
+    <string name="no_apps_for_filter">Tiada apl yang sepadan dengan penapis ini</string>
 </resources>

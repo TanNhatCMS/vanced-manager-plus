@@ -105,4 +105,12 @@
     <string name="installing_single_app">%1$s 설치 중...</string>
     <string name="downloads_in_progress">다운로드 진행 중</string>
     <string name="concurrent_downloads_active">%1$d개 다운로드 활성</string>
+
+    <!-- Filter -->
+    <string name="filter_label">필터</string>
+    <string name="filter_all">전체</string>
+    <string name="filter_installed">설치됨</string>
+    <string name="filter_not_installed">미설치</string>
+    <string name="filter_updates">업데이트</string>
+    <string name="no_apps_for_filter">이 필터에 맞는 앱이 없습니다</string>
 </resources>

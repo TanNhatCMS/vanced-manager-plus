@@ -117,4 +117,12 @@
     <string name="installing_single_app">Nag-i-install ng %1$s</string>
     <string name="downloads_in_progress">May mga download na tumatakbo</string>
     <string name="concurrent_downloads_active">%1$d concurrent downloads na aktibo</string>
+
+    <!-- Filter -->
+    <string name="filter_label">I-filter</string>
+    <string name="filter_all">Lahat</string>
+    <string name="filter_installed">Naka-install</string>
+    <string name="filter_not_installed">Hindi naka-install</string>
+    <string name="filter_updates">Mga Update</string>
+    <string name="no_apps_for_filter">Walang app na tumutugma sa filter na ito</string>
 </resources>

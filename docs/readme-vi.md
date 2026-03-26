@@ -132,7 +132,7 @@ RV Manager Plus 3.0 đại diện cho việc đại tu hoàn toàn các phiên b
 ## 🚀 **Hướng dẫn cài đặt**
 
 ### **Phương pháp 1: Tải xuống APK trực tiếp**
-1. Tải xuống APK mới nhất từ [Releases](https://github.com/vancedapps/rv-manager/releases)
+1. Tải xuống APK mới nhất từ [Releases](https://github.com/vancedto/vanced-manager-plus/releases)
 2. Bật "Cài đặt từ nguồn không xác định" trong cài đặt Android
 3. Cài đặt tệp APK
 4. Cấp các quyền cần thiết
@@ -140,7 +140,7 @@ RV Manager Plus 3.0 đại diện cho việc đại tu hoàn toàn các phiên b
 ### **Phương pháp 2: Xây dựng từ mã nguồn**
 ```bash
 # Clone repository
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # Xây dựng phiên bản debug
@@ -265,7 +265,7 @@ Chúng tôi hoan nghênh sự đóng góp từ cộng đồng!
 - Android SDK API 35
 
 # Thiết lập
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 ./gradlew build
 ```
@@ -296,7 +296,7 @@ cd rv-manager
 - **Ngôn ngữ không thay đổi**: Khởi động lại ứng dụng sau khi chọn ngôn ngữ
 
 ### **Nhận trợ giúp**
-- **GitHub Issues**: [Báo cáo lỗi hoặc yêu cầu tính năng](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues**: [Báo cáo lỗi hoặc yêu cầu tính năng](https://github.com/vancedto/vanced-manager-plus/issues)
 - **Tài liệu**: Kiểm tra README này và wiki
 - **Cộng đồng**: Tham gia thảo luận trong phần Issues
 
@@ -314,10 +314,10 @@ Dự án này được cấp phép theo Giấy phép MIT - xem tệp [LICENSE](L
 ## 🔗 **Liên kết**
 
 - **Trang chủ**: [https://vanced.to](https://vanced.to)
-- **Repository**: [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **Releases**: [Tải xuống mới nhất](https://github.com/vancedapps/rv-manager/releases)
-- **Issues**: [Báo cáo lỗi & Yêu cầu tính năng](https://github.com/vancedapps/rv-manager/issues)
-- **Wiki**: [Tài liệu](https://github.com/vancedapps/rv-manager/wiki)
+- **Repository**: [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **Releases**: [Tải xuống mới nhất](https://github.com/vancedto/vanced-manager-plus/releases)
+- **Issues**: [Báo cáo lỗi & Yêu cầu tính năng](https://github.com/vancedto/vanced-manager-plus/issues)
+- **Wiki**: [Tài liệu](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

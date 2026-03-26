@@ -113,4 +113,12 @@
     <string name="installing_single_app">Установка %1$s...</string>
     <string name="downloads_in_progress">Загрузки в процессе</string>
     <string name="concurrent_downloads_active">Активно %1$d одновременных загрузок</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Фильтр</string>
+    <string name="filter_all">Все</string>
+    <string name="filter_installed">Установленные</string>
+    <string name="filter_not_installed">Не установленные</string>
+    <string name="filter_updates">Обновления</string>
+    <string name="no_apps_for_filter">Нет приложений по этому фильтру</string>
 </resources>

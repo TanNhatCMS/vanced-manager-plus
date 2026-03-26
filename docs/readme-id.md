@@ -128,7 +128,7 @@ RV Manager Plus 3.0 merepresentasikan perombakan lengkap dari versi sebelumnya, 
 ## 🚀 **Panduan Instalasi**
 
 ### **Metode 1: Download APK Langsung**
-1. Download APK terbaru dari [Releases](https://github.com/vancedapps/rv-manager/releases)
+1. Download APK terbaru dari [Releases](https://github.com/vancedto/vanced-manager-plus/releases)
 2. Aktifkan "Install dari sumber tidak dikenal" di pengaturan Android
 3. Install file APK
 4. Berikan izin yang diperlukan
@@ -136,7 +136,7 @@ RV Manager Plus 3.0 merepresentasikan perombakan lengkap dari versi sebelumnya, 
 ### **Metode 2: Build dari Source Code**
 ```bash
 # Clone repository
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # Build versi debug
@@ -223,7 +223,7 @@ Kami menerima kontribusi dari komunitas!
 - **Bahasa Tidak Berubah**: Restart aplikasi setelah pemilihan bahasa
 
 ### **Mendapatkan Bantuan**
-- **GitHub Issues**: [Laporkan bug atau minta fitur](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues**: [Laporkan bug atau minta fitur](https://github.com/vancedto/vanced-manager-plus/issues)
 - **Dokumentasi**: Periksa README ini dan wiki
 - **Komunitas**: Bergabung dalam diskusi di bagian Issues
 
@@ -241,10 +241,10 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) unt
 ## 🔗 **Links**
 
 - **Homepage**: [https://vanced.to](https://vanced.to)
-- **Repository**: [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **Releases**: [Download Terbaru](https://github.com/vancedapps/rv-manager/releases)
-- **Issues**: [Laporan Bug & Permintaan Fitur](https://github.com/vancedapps/rv-manager/issues)
-- **Wiki**: [Dokumentasi](https://github.com/vancedapps/rv-manager/wiki)
+- **Repository**: [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **Releases**: [Download Terbaru](https://github.com/vancedto/vanced-manager-plus/releases)
+- **Issues**: [Laporan Bug & Permintaan Fitur](https://github.com/vancedto/vanced-manager-plus/issues)
+- **Wiki**: [Dokumentasi](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

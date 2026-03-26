@@ -132,7 +132,7 @@
 ## 🚀 **دليل التثبيت**
 
 ### **الطريقة 1: تحميل APK مباشر**
-1. حمل أحدث APK من [الإصدارات](https://github.com/vancedapps/rv-manager/releases)
+1. حمل أحدث APK من [الإصدارات](https://github.com/vancedto/vanced-manager-plus/releases)
 2. فعل "التثبيت من مصادر غير معروفة" في إعدادات أندرويد
 3. ثبت ملف APK
 4. امنح الأذونات الضرورية
@@ -140,7 +140,7 @@
 ### **الطريقة 2: البناء من المصدر**
 ```bash
 # استنساخ المستودع
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # بناء إصدار التطوير
@@ -266,7 +266,7 @@ cd rv-manager
 - Android SDK API 35
 
 # الإعداد
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 ./gradlew build
 ```
@@ -297,7 +297,7 @@ cd rv-manager
 - **اللغة لا تتغير**: أعد تشغيل التطبيق بعد اختيار اللغة
 
 ### **الحصول على المساعدة**
-- **GitHub Issues**: [الإبلاغ عن الأخطاء أو طلب الميزات](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues**: [الإبلاغ عن الأخطاء أو طلب الميزات](https://github.com/vancedto/vanced-manager-plus/issues)
 - **التوثيق**: تحقق من هذا README والويكي
 - **المجتمع**: انضم للمناقشات في قسم Issues
 
@@ -315,10 +315,10 @@ cd rv-manager
 ## 🔗 **الروابط**
 
 - **الصفحة الرئيسية**: [https://vanced.to](https://vanced.to)
-- **المستودع**: [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **الإصدارات**: [أحدث التحميلات](https://github.com/vancedapps/rv-manager/releases)
-- **المشاكل**: [تقارير الأخطاء وطلبات الميزات](https://github.com/vancedapps/rv-manager/issues)
-- **الويكي**: [التوثيق](https://github.com/vancedapps/rv-manager/wiki)
+- **المستودع**: [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **الإصدارات**: [أحدث التحميلات](https://github.com/vancedto/vanced-manager-plus/releases)
+- **المشاكل**: [تقارير الأخطاء وطلبات الميزات](https://github.com/vancedto/vanced-manager-plus/issues)
+- **الويكي**: [التوثيق](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

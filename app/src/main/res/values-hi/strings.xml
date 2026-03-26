@@ -111,4 +111,12 @@
     <string name="installing_single_app">%1$s इंस्टॉल कर रहे हैं...</string>
     <string name="downloads_in_progress">डाउनलोड प्रगति में</string>
     <string name="concurrent_downloads_active">%1$d समानांतर डाउनलोड सक्रिय</string>
+
+    <!-- Filter -->
+    <string name="filter_label">फ़िल्टर</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_installed">स्थापित</string>
+    <string name="filter_not_installed">अस्थापित</string>
+    <string name="filter_updates">अपडेट</string>
+    <string name="no_apps_for_filter">इस फ़िल्टर से कोई ऐप मेल नहीं खाता</string>
 </resources>

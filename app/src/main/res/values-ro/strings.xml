@@ -117,4 +117,12 @@
     <string name="installing_single_app">Se instalează %1$s</string>
     <string name="downloads_in_progress">Descărcări în progres</string>
     <string name="concurrent_downloads_active">%1$d descărcări simultane active</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Filtrare</string>
+    <string name="filter_all">Toate</string>
+    <string name="filter_installed">Instalate</string>
+    <string name="filter_not_installed">Neinstalate</string>
+    <string name="filter_updates">Actualizări</string>
+    <string name="no_apps_for_filter">Nicio aplicație nu corespunde acestui filtru</string>
 </resources>

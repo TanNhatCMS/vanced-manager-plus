@@ -1,8 +1,11 @@
 package com.revanced.net.revancedmanager.presentation.ui.components
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -42,6 +45,12 @@ fun ConfigDialog(
     var compactModeEnabled by remember(config) { mutableStateOf(config.compactMode) }
     var showThemeSelector by remember { mutableStateOf(false) }
     var showLanguageSelector by remember { mutableStateOf(false) }
+
+    // Interaction sources for D-pad / TV focus on collapse header rows
+    val themeCollapseInteraction = remember { MutableInteractionSource() }
+    val isThemeHeaderFocused by themeCollapseInteraction.collectIsFocusedAsState()
+    val langCollapseInteraction = remember { MutableInteractionSource() }
+    val isLangHeaderFocused by langCollapseInteraction.collectIsFocusedAsState()
 
     AlertDialog(
         onDismissRequest = onCancel,
@@ -87,7 +96,15 @@ fun ConfigDialog(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clickable { showThemeSelector = false }
+                                        .border(
+                                            width = if (isThemeHeaderFocused) 2.dp else 0.dp,
+                                            color = if (isThemeHeaderFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .clickable(
+                                            interactionSource = themeCollapseInteraction,
+                                            indication = LocalIndication.current
+                                        ) { showThemeSelector = false }
                                         .background(
                                             MaterialTheme.colorScheme.secondaryContainer,
                                             RoundedCornerShape(8.dp)
@@ -126,9 +143,9 @@ fun ConfigDialog(
                     } else {
                         // Selected theme display
                         Card(
+                            onClick = { showThemeSelector = true },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { showThemeSelector = true }
                                 .border(
                                     2.dp,
                                     MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
@@ -208,7 +225,15 @@ fun ConfigDialog(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clickable { showLanguageSelector = false }
+                                        .border(
+                                            width = if (isLangHeaderFocused) 2.dp else 0.dp,
+                                            color = if (isLangHeaderFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .clickable(
+                                            interactionSource = langCollapseInteraction,
+                                            indication = LocalIndication.current
+                                        ) { showLanguageSelector = false }
                                         .background(
                                             MaterialTheme.colorScheme.secondaryContainer,
                                             RoundedCornerShape(8.dp)
@@ -254,9 +279,9 @@ fun ConfigDialog(
                     } else {
                         // Selected language display
                         Card(
+                            onClick = { showLanguageSelector = true },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { showLanguageSelector = true }
                                 .border(
                                     2.dp,
                                     MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),

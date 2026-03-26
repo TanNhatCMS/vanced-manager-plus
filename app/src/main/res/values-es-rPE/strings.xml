@@ -70,4 +70,12 @@
     <string name="installation_failed_retry_message">Instalación falló: %1$s\n\n¿Desea reintentar? Esto desinstalará la versión anterior primero si existe.</string>
     <string name="uninstall_required_message">Para reintentar la instalación de %1$s, la versión anterior debe desinstalarse primero. ¿Continuar?</string>
     <string name="language_changed_message">El idioma ha cambiado a %1$s.\n\n¿Reiniciar la aplicación ahora para aplicar los cambios?</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Filtrar</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_installed">Instaladas</string>
+    <string name="filter_not_installed">No instaladas</string>
+    <string name="filter_updates">Actualizaciones</string>
+    <string name="no_apps_for_filter">Ninguna app coincide con este filtro</string>
 </resources> 

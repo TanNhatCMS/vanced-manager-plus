@@ -1,6 +1,10 @@
 package com.revanced.net.revancedmanager.presentation.ui.components
 
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -169,7 +173,11 @@ fun AppCard(
             
             // App description with read more functionality
             var isExpanded by remember { mutableStateOf(false) }
-            
+            val descInteractionSource = remember { MutableInteractionSource() }
+            val isDescFocused by descInteractionSource.collectIsFocusedAsState()
+            val showLessInteractionSource = remember { MutableInteractionSource() }
+            val isShowLessFocused by showLessInteractionSource.collectIsFocusedAsState()
+
             Column {
                 if (isExpanded) {
                     // Full description - clickable to collapse
@@ -177,9 +185,18 @@ fun AppCard(
                         text = app.description,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.clickable { isExpanded = false }
+                        modifier = Modifier
+                            .border(
+                                width = if (isDescFocused) 2.dp else 0.dp,
+                                color = if (isDescFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .clickable(
+                                interactionSource = descInteractionSource,
+                                indication = LocalIndication.current
+                            ) { isExpanded = false }
                     )
-                    
+
                     // MicroG requirement indicator
                     if (app.requiresMicroG) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -194,7 +211,15 @@ fun AppCard(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { isExpanded = false }
+                            .border(
+                                width = if (isShowLessFocused) 2.dp else 0.dp,
+                                color = if (isShowLessFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .clickable(
+                                interactionSource = showLessInteractionSource,
+                                indication = LocalIndication.current
+                            ) { isExpanded = false }
                             .padding(top = 4.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -222,11 +247,20 @@ fun AppCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.clickable { 
-                            if (app.description.length > 100) {
-                                isExpanded = true 
+                        modifier = Modifier
+                            .border(
+                                width = if (isDescFocused) 2.dp else 0.dp,
+                                color = if (isDescFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .clickable(
+                                interactionSource = descInteractionSource,
+                                indication = LocalIndication.current
+                            ) {
+                                if (app.description.length > 100) {
+                                    isExpanded = true
+                                }
                             }
-                        }
                     )
                 }
             }

@@ -132,7 +132,7 @@ RV Manager Plus 3.0 représente une refonte complète des versions précédentes
 ## 🚀 **Guide d'Installation**
 
 ### **Méthode 1 : Téléchargement Direct APK**
-1. Téléchargez le dernier APK depuis [Releases](https://github.com/vancedapps/rv-manager/releases)
+1. Téléchargez le dernier APK depuis [Releases](https://github.com/vancedto/vanced-manager-plus/releases)
 2. Activez "Installer depuis sources inconnues" dans les paramètres Android
 3. Installez le fichier APK
 4. Accordez les permissions nécessaires
@@ -140,7 +140,7 @@ RV Manager Plus 3.0 représente une refonte complète des versions précédentes
 ### **Méthode 2 : Construire depuis le Code Source**
 ```bash
 # Cloner le dépôt
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # Construire version debug
@@ -265,7 +265,7 @@ Nous accueillons les contributions de la communauté !
 - Android SDK API 35
 
 # Configuration
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 ./gradlew build
 ```
@@ -296,7 +296,7 @@ cd rv-manager
 - **Langue Ne Change Pas** : Redémarrez l'application après sélection de langue
 
 ### **Obtenir de l'Aide**
-- **GitHub Issues** : [Signaler bugs ou demander fonctionnalités](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues** : [Signaler bugs ou demander fonctionnalités](https://github.com/vancedto/vanced-manager-plus/issues)
 - **Documentation** : Consultez ce README et wiki
 - **Communauté** : Rejoignez discussions dans section Issues
 
@@ -314,10 +314,10 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour détail
 ## 🔗 **Liens**
 
 - **Page d'Accueil** : [https://vanced.to](https://vanced.to)
-- **Dépôt** : [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **Releases** : [Derniers Téléchargements](https://github.com/vancedapps/rv-manager/releases)
-- **Issues** : [Signalement de Bugs & Demandes de Fonctionnalités](https://github.com/vancedapps/rv-manager/issues)
-- **Wiki** : [Documentation](https://github.com/vancedapps/rv-manager/wiki)
+- **Dépôt** : [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **Releases** : [Derniers Téléchargements](https://github.com/vancedto/vanced-manager-plus/releases)
+- **Issues** : [Signalement de Bugs & Demandes de Fonctionnalités](https://github.com/vancedto/vanced-manager-plus/issues)
+- **Wiki** : [Documentation](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

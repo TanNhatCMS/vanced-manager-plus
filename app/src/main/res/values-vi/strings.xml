@@ -105,4 +105,12 @@
     <string name="installing_single_app">Đang cài %1$s...</string>
     <string name="downloads_in_progress">Đang tải xuống</string>
     <string name="concurrent_downloads_active">%1$d tải xuống đang hoạt động</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Lọc</string>
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_installed">Đã cài đặt</string>
+    <string name="filter_not_installed">Chưa cài đặt</string>
+    <string name="filter_updates">Cập nhật</string>
+    <string name="no_apps_for_filter">Không có ứng dụng nào phù hợp với bộ lọc</string>
 </resources>

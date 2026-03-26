@@ -56,4 +56,7 @@ sealed class AppEvent {
     // Search events
     data class SearchApps(val query: String) : AppEvent()
     data object ClearSearch : AppEvent()
+
+    // Filter events
+    data class SetFilter(val filter: AppFilterOption) : AppEvent()
 }

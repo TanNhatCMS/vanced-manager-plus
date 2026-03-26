@@ -80,9 +80,10 @@ class AppBloc @Inject constructor(
     private val activeDownloads = mutableMapOf<String, kotlinx.coroutines.Job>()
     private val installationRetries = mutableMapOf<String, Int>()
     private val completedDownloads = mutableSetOf<String>()
-    
-    // Installation Queue for parallel installation prompts
+
+    // Sequential installation queue — only one install dialog is shown at a time.
     private val installationQueue = mutableListOf<PendingInstallation>()
+    private var isInstallationInProgress = false
     
     // Track if app was backgrounded to determine auto-install behavior
     private var wasAppBackgrounded = false
@@ -341,10 +342,13 @@ class AppBloc @Inject constructor(
                 if (currentState is AppState.Success) {
                     val updatedApps = currentState.apps.map { app ->
                         when (app.status) {
-                            AppStatus.DOWNLOADING, 
+                            AppStatus.DOWNLOADING,
                             AppStatus.INSTALLING -> {
-                                Log.i(TAG, "🔄 Resetting ${app.packageName} status from ${app.status} to UPDATE_AVAILABLE")
-                                app.copy(status = AppStatus.UPDATE_AVAILABLE, downloadProgress = 0f)
+                                // Resolve the actual install state so first-time installs show
+                                // NOT_INSTALLED and updates show UPDATE_AVAILABLE.
+                                val actual = resolveActualStatus(app.packageName)
+                                Log.i(TAG, "🔄 Resetting ${app.packageName} from ${app.status} to $actual")
+                                app.copy(status = actual, downloadProgress = 0f)
                             }
                             else -> app
                         }
@@ -457,9 +461,20 @@ class AppBloc @Inject constructor(
                 
                 if (download.isComplete && download.filePath != null) {
                     Log.i(TAG, "🎉 Found completed download that may have missed broadcast: $packageName")
-                    
-                    // Trigger download completion handling
-                    handleEvent(AppEvent.DownloadCompleted(packageName, download.filePath!!))
+
+                    // Skip if the app is already installed or mid-install — this prevents a
+                    // re-install when the user returns to the foreground within the 5-second
+                    // window that SimpleDownloadManager keeps completed entries.
+                    val currentStatus = (_state.value as? AppState.Success)
+                        ?.apps?.find { it.packageName == packageName }?.status
+                    if (currentStatus == AppStatus.UP_TO_DATE ||
+                        currentStatus == AppStatus.INSTALLING ||
+                        installationQueue.any { it.packageName == packageName }) {
+                        Log.i(TAG, "⏭️ Skipping already handled/installing package: $packageName (status=$currentStatus)")
+                    } else {
+                        // Trigger download completion handling
+                        handleEvent(AppEvent.DownloadCompleted(packageName, download.filePath!!))
+                    }
                 } else if (!download.isComplete) {
                     Log.i(TAG, "🔄 Download still in progress: $packageName (${download.progress}%)")
                     
@@ -537,6 +552,9 @@ class AppBloc @Inject constructor(
             // Search events
             is AppEvent.SearchApps -> searchApps(event.query)
             is AppEvent.ClearSearch -> clearSearch()
+
+            // Filter events
+            is AppEvent.SetFilter -> setFilter(event.filter)
         }
     }
     
@@ -557,6 +575,16 @@ class AppBloc @Inject constructor(
         val currentState = _state.value
         if (currentState is AppState.Success) {
             _state.value = currentState.copy(searchQuery = "")
+        }
+    }
+
+    /**
+     * Set the active filter option
+     */
+    private fun setFilter(filter: AppFilterOption) {
+        val currentState = _state.value
+        if (currentState is AppState.Success) {
+            _state.value = currentState.copy(filterOption = filter)
         }
     }
 
@@ -735,10 +763,15 @@ class AppBloc @Inject constructor(
         
         // Cancel any existing download for this package
         cancelDownload(packageName)
-        
-        // 🔥 Clear completed downloads tracking to allow re-download and installation
+
+        // Clear completed downloads tracking to allow re-download and installation
         completedDownloads.remove(packageName)
         Log.i(TAG, "🗑️ Cleared completed downloads tracking for: $packageName")
+
+        // Remove from installation queue — if a previous download queued an install with an old
+        // APK path, that entry must be removed so the new download's path is used instead.
+        installationQueue.removeAll { it.packageName == packageName }
+        Log.i(TAG, "🗑️ Removed stale queue entry for: $packageName")
         
         // Storage space check is handled in the service
         // Proceed directly to download
@@ -841,32 +874,38 @@ class AppBloc @Inject constructor(
     }
 
     /**
-     * Handle download failure
+     * Handle download failure — restore actual install status so the UI stays consistent.
      */
     private fun handleDownloadFailed(packageName: String, error: String) {
         Log.e(TAG, "Download failed: $packageName - $error")
         activeDownloads.remove(packageName)
-        
-        updateAppStatus(packageName, AppStatus.NOT_INSTALLED)
+
+        // Determine correct status from what is actually installed on the device
+        val restoredStatus = resolveActualStatus(packageName)
+        updateAppStatus(packageName, restoredStatus)
         updateAppProgress(packageName, 0f)
         showError(error)
     }
 
     /**
-     * Cancel an ongoing download
+     * Cancel an ongoing download — restore actual install status so the UI stays consistent.
      */
     private fun cancelDownload(packageName: String) {
         Log.i(TAG, "Cancelling download: $packageName")
         activeDownloads[packageName]?.cancel()
         activeDownloads.remove(packageName)
-        
-        // Cancel download
+
         simpleDownloadManager.cancelDownload(packageName)
-        
-        updateAppStatus(packageName, AppStatus.NOT_INSTALLED)
+
+        val restoredStatus = resolveActualStatus(packageName)
+        updateAppStatus(packageName, restoredStatus)
         updateAppProgress(packageName, 0f)
-        
-        showToast(stringProvider.getString(R.string.download_cancelled))
+
+        // Only show the cancellation toast if the download was really in progress (not called
+        // internally as part of a re-download).
+        if (restoredStatus != AppStatus.DOWNLOADING) {
+            showToast(stringProvider.getString(R.string.download_cancelled))
+        }
     }
 
     /**
@@ -1611,6 +1650,21 @@ class AppBloc @Inject constructor(
     }
 
     /**
+     * Determine the correct AppStatus for a package by querying the PackageManager.
+     * Used to restore status after a download cancel or failure.
+     */
+    private fun resolveActualStatus(packageName: String): AppStatus {
+        if (!appManager.isAppInstalled(packageName)) return AppStatus.NOT_INSTALLED
+        val installedVersion = appManager.getInstalledVersion(packageName) ?: return AppStatus.NOT_INSTALLED
+        val latestVersion = (_state.value as? AppState.Success)
+            ?.apps?.find { it.packageName == packageName }?.latestVersion ?: return AppStatus.UP_TO_DATE
+        return when (compareVersions(installedVersion, latestVersion)) {
+            0, 1 -> AppStatus.UP_TO_DATE
+            else -> AppStatus.UPDATE_AVAILABLE
+        }
+    }
+
+    /**
      * Compare version strings
      * @return 1 if version1 > version2, -1 if version1 < version2, 0 if equal
      */
@@ -1868,84 +1922,78 @@ class AppBloc @Inject constructor(
         }
     }
     
-    // ============= INSTALLATION QUEUE MANAGEMENT =============
-    
+    // ============= SEQUENTIAL INSTALLATION QUEUE =============
+
     /**
-     * Add app to installation queue and trigger installation immediately
-     * This allows multiple installation dialogs to be shown at once
+     * Add a package to the installation queue.
+     * If no install is currently in progress, starts it immediately; otherwise the item
+     * waits until [processNextInstallation] is called after the current install finishes.
      */
     private fun queueInstallation(packageName: String, filePath: String, appName: String = packageName) {
-        Log.i(TAG, "📋 Adding to installation queue: $appName ($packageName)")
-        
-        // Check if already in queue
+        Log.i(TAG, "📋 Queuing installation: $appName ($packageName)")
+
         if (installationQueue.any { it.packageName == packageName }) {
-            Log.w(TAG, "⚠️ App already in installation queue: $packageName")
+            Log.w(TAG, "⚠️ Already in queue, skipping: $packageName")
             return
         }
-        
-        val pendingInstallation = PendingInstallation(packageName, filePath, appName)
-        installationQueue.add(pendingInstallation)
-        
-        Log.i(TAG, "📋 Queue size: ${installationQueue.size}")
-        
-        // 🔥 NEW: Trigger installation immediately without waiting for previous ones
-        Log.i(TAG, "🚀 Triggering installation immediately: $appName")
-        triggerInstallationImmediately(pendingInstallation)
+
+        installationQueue.add(PendingInstallation(packageName, filePath, appName))
+        Log.i(TAG, "📋 Queue size: ${installationQueue.size}, inProgress: $isInstallationInProgress")
+
+        if (!isInstallationInProgress) {
+            triggerNextInstallation()
+        }
+        // else: will be picked up when the current install finishes via processNextInstallation()
     }
-    
+
     /**
-     * Trigger installation immediately for the given app
-     * This allows multiple installation dialogs to be shown simultaneously
+     * Start the next pending installation from the front of the queue.
+     * Must only be called when [isInstallationInProgress] is false.
      */
-    private fun triggerInstallationImmediately(pendingInstallation: PendingInstallation) {
-        Log.i(TAG, "🚀 === TRIGGER INSTALLATION IMMEDIATELY ===")
-        Log.i(TAG, "🚀 Installing: ${pendingInstallation.appName} (${pendingInstallation.packageName})")
-        
-        // Update UI to installing state
-        updateAppStatus(pendingInstallation.packageName, AppStatus.INSTALLING)
-        
-        // Start actual installation immediately
-        installAppDirect(pendingInstallation.packageName, pendingInstallation.filePath)
+    private fun triggerNextInstallation() {
+        val next = installationQueue.firstOrNull()
+        if (next == null) {
+            Log.i(TAG, "📋 Installation queue empty, nothing to start")
+            isInstallationInProgress = false
+            return
+        }
+
+        isInstallationInProgress = true
+        Log.i(TAG, "🚀 Starting next installation: ${next.appName} (${next.packageName})")
+        updateAppStatus(next.packageName, AppStatus.INSTALLING)
+        installAppDirect(next.packageName, next.filePath)
     }
-    
+
     /**
-     * Process next installation in queue (kept for compatibility but simplified)
-     * This is now mainly used for cleanup and fallback scenarios
+     * Called after every install result (success / failure / cancel).
+     * Removes the finished entry and starts the next one.
      */
     private fun processNextInstallation() {
-        Log.i(TAG, "📋 === PROCESS NEXT INSTALLATION (CLEANUP) ===")
-        Log.i(TAG, "📋 Queue size: ${installationQueue.size}")
-        
-        if (installationQueue.isEmpty()) {
-            Log.i(TAG, "📋 Installation queue empty")
-            return
-        }
-        
-        // Remove completed installations from queue
-        val completedPackages = mutableListOf<String>()
+        Log.i(TAG, "📋 processNextInstallation — queue size before cleanup: ${installationQueue.size}")
+
+        // Remove entries that are no longer pending (installed, not-installed, update-available)
         installationQueue.removeAll { installation ->
-            val currentState = _state.value
-            if (currentState is AppState.Success) {
-                val app = currentState.apps.find { it.packageName == installation.packageName }
-                val isCompleted = app?.status == AppStatus.UP_TO_DATE || app?.status == AppStatus.NOT_INSTALLED
-                if (isCompleted) {
-                    completedPackages.add(installation.packageName)
-                    Log.i(TAG, "🗑️ Removing completed installation from queue: ${installation.appName}")
-                }
-                isCompleted
-            } else false
+            val state = _state.value as? AppState.Success
+            val status = state?.apps?.find { it.packageName == installation.packageName }?.status
+            val done = status == AppStatus.UP_TO_DATE ||
+                       status == AppStatus.NOT_INSTALLED ||
+                       status == AppStatus.UPDATE_AVAILABLE
+            if (done) Log.i(TAG, "🗑️ Removing finished entry: ${installation.appName}")
+            done
         }
-        
-        Log.i(TAG, "📋 Cleaned up ${completedPackages.size} completed installations")
-        Log.i(TAG, "📋 Remaining in queue: ${installationQueue.size}")
+
+        isInstallationInProgress = false
+        Log.i(TAG, "📋 Queue size after cleanup: ${installationQueue.size}")
+        triggerNextInstallation()
     }
-    
+
     /**
-     * Clear installation queue (in case of errors or app restart)
+     * Clear the entire installation queue (app restart / error recovery).
      */
     private fun clearInstallationQueue() {
         Log.i(TAG, "🗑️ Clearing installation queue (${installationQueue.size} items)")
         installationQueue.clear()
+        isInstallationInProgress = false
     }
     
     // ============= CONCURRENT DOWNLOADS HANDLING - AUTO INSTALL =============
@@ -1971,12 +2019,24 @@ class AppBloc @Inject constructor(
                     updateAppStatus(packageName, AppStatus.UPDATE_AVAILABLE)
                 }
                 
-                // Queue all completed downloads for sequential installation
+                // Queue all completed downloads for installation.
+                // Skip packages that were already handled by an individual ACTION_DOWNLOAD_COMPLETE
+                // broadcast (their individual handler ran first and may have already installed the
+                // app before this ALL_COMPLETE broadcast fires).
+                val successState = _state.value as? AppState.Success
                 completedPackages.zip(completedNames).zip(completedPaths).forEach { (namePackage, path) ->
                     val (packageName, appName) = namePackage
+                    val currentStatus = successState?.apps?.find { it.packageName == packageName }?.status
+                    if (currentStatus == AppStatus.UP_TO_DATE) {
+                        Log.w(TAG, "⏭️ Skipping re-queue for already installed package: $packageName")
+                        return@forEach
+                    }
+                    if (currentStatus == AppStatus.INSTALLING ||
+                        installationQueue.any { it.packageName == packageName }) {
+                        Log.w(TAG, "⏭️ Skipping re-queue for already-installing package: $packageName")
+                        return@forEach
+                    }
                     Log.i(TAG, "📋 Queueing for installation: $appName ($packageName)")
-                    
-                    // Add to installation queue
                     queueInstallation(packageName, path, appName)
                 }
                 

@@ -128,7 +128,7 @@ RV Manager Plus 3.0은 이전 버전들의 완전한 개편을 나타내며, 모
 ## 🚀 **설치 가이드**
 
 ### **방법 1: 직접 APK 다운로드**
-1. [Releases](https://github.com/vancedapps/rv-manager/releases)에서 최신 APK 다운로드
+1. [Releases](https://github.com/vancedto/vanced-manager-plus/releases)에서 최신 APK 다운로드
 2. Android 설정에서 "알 수 없는 소스에서 설치" 활성화
 3. APK 파일 설치
 4. 필요한 권한 부여
@@ -136,7 +136,7 @@ RV Manager Plus 3.0은 이전 버전들의 완전한 개편을 나타내며, 모
 ### **방법 2: 소스 코드에서 빌드**
 ```bash
 # 저장소 클론
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # 디버그 버전 빌드
@@ -223,7 +223,7 @@ cd rv-manager
 - **언어가 변경되지 않음**: 언어 선택 후 앱 재시작
 
 ### **도움 받기**
-- **GitHub Issues**: [버그 신고 또는 기능 요청](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues**: [버그 신고 또는 기능 요청](https://github.com/vancedto/vanced-manager-plus/issues)
 - **문서**: 이 README 및 위키 확인
 - **커뮤니티**: Issues 섹션의 토론에 참여
 
@@ -241,10 +241,10 @@ cd rv-manager
 ## 🔗 **링크**
 
 - **홈페이지**: [https://vanced.to](https://vanced.to)
-- **저장소**: [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **릴리스**: [최신 다운로드](https://github.com/vancedapps/rv-manager/releases)
-- **Issues**: [버그 신고 및 기능 요청](https://github.com/vancedapps/rv-manager/issues)
-- **위키**: [문서](https://github.com/vancedapps/rv-manager/wiki)
+- **저장소**: [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **릴리스**: [최신 다운로드](https://github.com/vancedto/vanced-manager-plus/releases)
+- **Issues**: [버그 신고 및 기능 요청](https://github.com/vancedto/vanced-manager-plus/issues)
+- **위키**: [문서](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

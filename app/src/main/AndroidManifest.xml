@@ -17,6 +17,9 @@
     <!-- WorkManager requires this for API level 31+ -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
+    <!-- Android TV: touchscreen is not required -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+
 
 
 
@@ -64,8 +67,11 @@
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 

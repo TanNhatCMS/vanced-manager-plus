@@ -105,4 +105,12 @@
     <string name="installing_single_app">%1$s wird installiert...</string>
     <string name="downloads_in_progress">Downloads laufen</string>
     <string name="concurrent_downloads_active">%1$d aktive Downloads</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Filter</string>
+    <string name="filter_all">Alle</string>
+    <string name="filter_installed">Installiert</string>
+    <string name="filter_not_installed">Nicht installiert</string>
+    <string name="filter_updates">Updates</string>
+    <string name="no_apps_for_filter">Keine Apps entsprechen diesem Filter</string>
 </resources>

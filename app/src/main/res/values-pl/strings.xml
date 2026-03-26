@@ -117,4 +117,12 @@
     <string name="installing_single_app">Instalowanie %1$s</string>
     <string name="downloads_in_progress">Pobierania w toku</string>
     <string name="concurrent_downloads_active">%1$d równoczesnych pobrań aktywnych</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Filtruj</string>
+    <string name="filter_all">Wszystkie</string>
+    <string name="filter_installed">Zainstalowane</string>
+    <string name="filter_not_installed">Niezainstalowane</string>
+    <string name="filter_updates">Aktualizacje</string>
+    <string name="no_apps_for_filter">Brak aplikacji pasujących do tego filtra</string>
 </resources>

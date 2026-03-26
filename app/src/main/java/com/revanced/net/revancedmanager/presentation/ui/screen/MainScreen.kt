@@ -4,6 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,19 +25,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Coffee
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +60,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -55,6 +70,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.revanced.net.revancedmanager.R
 import com.revanced.net.revancedmanager.presentation.bloc.AppBloc
 import com.revanced.net.revancedmanager.presentation.bloc.AppEvent
+import com.revanced.net.revancedmanager.presentation.bloc.AppFilterOption
 import com.revanced.net.revancedmanager.presentation.bloc.AppState
 import com.revanced.net.revancedmanager.presentation.bloc.DialogState
 import com.revanced.net.revancedmanager.presentation.ui.components.AppCard
@@ -136,11 +152,15 @@ fun MainScreen(
                 AppListScreen(
                     apps = currentState.filteredApps,
                     searchQuery = currentState.searchQuery,
+                    filterOption = currentState.filterOption,
                     onSearchQueryChange = { query ->
                         viewModel.handleEvent(AppEvent.SearchApps(query))
                     },
                     onClearSearch = {
                         viewModel.handleEvent(AppEvent.ClearSearch)
+                    },
+                    onFilterChange = { filter ->
+                        viewModel.handleEvent(AppEvent.SetFilter(filter))
                     },
                     onEvent = viewModel::handleEvent,
                     isCompactMode = currentState.config.compactMode,
@@ -368,8 +388,10 @@ private fun ErrorScreen(
 private fun AppListScreen(
     apps: List<com.revanced.net.revancedmanager.domain.model.RevancedApp>,
     searchQuery: String = "",
+    filterOption: AppFilterOption = AppFilterOption.ALL,
     onSearchQueryChange: (String) -> Unit = {},
     onClearSearch: () -> Unit = {},
+    onFilterChange: (AppFilterOption) -> Unit = {},
     onEvent: (AppEvent) -> Unit,
     isCompactMode: Boolean = false,
     modifier: Modifier = Modifier
@@ -391,12 +413,14 @@ private fun AppListScreen(
             )
         }
         
-        // Search bar
+        // Search + filter bar
         item {
-            SearchBar(
+            SearchAndFilterBar(
                 query = searchQuery,
+                filterOption = filterOption,
                 onQueryChange = onSearchQueryChange,
                 onClear = onClearSearch,
+                onFilterChange = onFilterChange,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
@@ -413,10 +437,11 @@ private fun AppListScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = if (searchQuery.isNotBlank()) 
-                            stringResource(R.string.no_apps_found, searchQuery) 
-                        else 
-                            stringResource(R.string.no_apps_available),
+                        text = when {
+                            searchQuery.isNotBlank() -> stringResource(R.string.no_apps_found, searchQuery)
+                            filterOption != AppFilterOption.ALL -> stringResource(R.string.no_apps_for_filter)
+                            else -> stringResource(R.string.no_apps_available)
+                        },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -456,7 +481,7 @@ private fun AppListScreen(
             SupportButtons(
                 onKofiClick = { launchUrl(context, "https://vanced.to/donate-redir") },
                 onWebsiteClick = { launchUrl(context, "https://vanced.to") },
-                onGithubClick = { launchUrl(context, "https://github.com/vancedapps/rv-manager") }
+                onGithubClick = { launchUrl(context, "https://github.com/vancedto/vanced-manager-plus/") }
             )
         }
 
@@ -570,58 +595,165 @@ private fun launchUrl(context: Context, url: String) {
 }
 
 /**
- * Compact search bar for filtering apps
+ * Combined search + filter bar with animated filter chips.
  */
 @Composable
-private fun SearchBar(
+private fun SearchAndFilterBar(
     query: String,
+    filterOption: AppFilterOption,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit,
+    onFilterChange: (AppFilterOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    androidx.compose.material3.TextField(
-        value = query,
-        onValueChange = onQueryChange,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp),
-        placeholder = {
-            Text(
-                text = stringResource(R.string.search_apps),
-                style = MaterialTheme.typography.bodySmall
+    var filterExpanded by remember { mutableStateOf(filterOption != AppFilterOption.ALL) }
+    val isFilterActive = filterOption != AppFilterOption.ALL
+
+    // Auto-show chips when a filter becomes active from outside
+    LaunchedEffect(isFilterActive) {
+        if (isFilterActive) filterExpanded = true
+    }
+
+    // Chips are visible when expanded OR when a filter is active
+    val showChips = filterExpanded || isFilterActive
+
+    Column(modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Search field
+            androidx.compose.material3.TextField(
+                value = query,
+                onValueChange = onQueryChange,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp),
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.search_apps),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search",
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        androidx.compose.material3.IconButton(
+                            onClick = onClear,
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Clear,
+                                contentDescription = "Clear search",
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                },
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium,
+                colors = androidx.compose.material3.TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                textStyle = MaterialTheme.typography.bodySmall
             )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.Search,
-                contentDescription = "Search",
-                modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        trailingIcon = {
-            if (query.isNotEmpty()) {
-                androidx.compose.material3.IconButton(
-                    onClick = onClear,
-                    modifier = Modifier.size(32.dp)
+
+            // Filter toggle button with active-state badge
+            BadgedBox(
+                badge = {
+                    if (isFilterActive) {
+                        Badge(containerColor = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(
+                            if (isFilterActive) MaterialTheme.colorScheme.primaryContainer
+                            else MaterialTheme.colorScheme.surfaceVariant
+                        )
+                        .clickable { filterExpanded = !filterExpanded },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = "Clear search",
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        imageVector = Icons.Filled.FilterList,
+                        contentDescription = stringResource(R.string.filter_label),
+                        modifier = Modifier.size(20.dp),
+                        tint = if (isFilterActive) MaterialTheme.colorScheme.onPrimaryContainer
+                               else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
-        },
-        singleLine = true,
-        shape = MaterialTheme.shapes.medium,
-        colors = androidx.compose.material3.TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        textStyle = MaterialTheme.typography.bodySmall
-    )
+        }
+
+        // Animated filter chips row
+        AnimatedVisibility(
+            visible = showChips,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                FilterChip(
+                    selected = filterOption == AppFilterOption.ALL,
+                    onClick = { onFilterChange(AppFilterOption.ALL) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.filter_all),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                )
+                FilterChip(
+                    selected = filterOption == AppFilterOption.INSTALLED,
+                    onClick = { onFilterChange(AppFilterOption.INSTALLED) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.filter_installed),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                )
+                FilterChip(
+                    selected = filterOption == AppFilterOption.NOT_INSTALLED,
+                    onClick = { onFilterChange(AppFilterOption.NOT_INSTALLED) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.filter_not_installed),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                )
+                FilterChip(
+                    selected = filterOption == AppFilterOption.UPDATES_AVAILABLE,
+                    onClick = { onFilterChange(AppFilterOption.UPDATES_AVAILABLE) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.filter_updates),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

@@ -132,7 +132,7 @@ RV Manager Plus 3.0 představuje kompletní přepracování předchozích verzí
 ## 🚀 **Průvodce instalací**
 
 ### **Metoda 1: Přímé stažení APK**
-1. Stáhněte nejnovější APK z [Releases](https://github.com/vancedapps/rv-manager/releases)
+1. Stáhněte nejnovější APK z [Releases](https://github.com/vancedto/vanced-manager-plus/releases)
 2. Povolte "Instalovat z neznámých zdrojů" v nastavení Androidu
 3. Nainstalujte soubor APK
 4. Udělte potřebná oprávnění
@@ -140,7 +140,7 @@ RV Manager Plus 3.0 představuje kompletní přepracování předchozích verzí
 ### **Metoda 2: Sestavení ze zdrojového kódu**
 ```bash
 # Klonování repozitáře
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 
 # Sestavení debug verze
@@ -266,7 +266,7 @@ Vítáme příspěvky od komunity!
 - Android SDK API 35
 
 # Nastavení
-git clone https://github.com/vancedapps/rv-manager.git
+git clone https://github.com/vancedto/vanced-manager-plus.git
 cd rv-manager
 ./gradlew build
 ```
@@ -297,7 +297,7 @@ cd rv-manager
 - **Jazyk se nemění**: Restartujte aplikaci po výběru jazyka
 
 ### **Získání pomoci**
-- **GitHub Issues**: [Nahlaste chyby nebo požádejte o funkce](https://github.com/vancedapps/rv-manager/issues)
+- **GitHub Issues**: [Nahlaste chyby nebo požádejte o funkce](https://github.com/vancedto/vanced-manager-plus/issues)
 - **Dokumentace**: Podívejte se na toto README a wiki
 - **Komunita**: Připojte se k diskuzím v sekci Issues
 
@@ -315,10 +315,10 @@ Tento projekt je licencován pod MIT licencí - viz soubor [LICENSE](LICENSE) pr
 ## 🔗 **Odkazy**
 
 - **Domovská stránka**: [https://vanced.to](https://vanced.to)
-- **Repozitář**: [https://github.com/vancedapps/rv-manager](https://github.com/vancedapps/rv-manager)
-- **Releases**: [Nejnovější stahování](https://github.com/vancedapps/rv-manager/releases)
-- **Issues**: [Hlášení chyb a požadavky na funkce](https://github.com/vancedapps/rv-manager/issues)
-- **Wiki**: [Dokumentace](https://github.com/vancedapps/rv-manager/wiki)
+- **Repozitář**: [https://github.com/vancedto/vanced-manager-plus](https://github.com/vancedto/vanced-manager-plus)
+- **Releases**: [Nejnovější stahování](https://github.com/vancedto/vanced-manager-plus/releases)
+- **Issues**: [Hlášení chyb a požadavky na funkce](https://github.com/vancedto/vanced-manager-plus/issues)
+- **Wiki**: [Dokumentace](https://github.com/vancedto/vanced-manager-plus/wiki)
 
 ---
 

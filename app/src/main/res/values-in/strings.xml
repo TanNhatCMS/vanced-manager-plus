@@ -73,4 +73,12 @@
     <string name="installation_failed_retry_message">Instalasi gagal: %1$s\n\nCoba lagi? Ini akan menghapus versi lama terlebih dahulu jika ada.</string>
     <string name="uninstall_required_message">Untuk mencoba instalasi %1$s lagi, versi lama perlu dihapus dulu. Lanjutkan?</string>
     <string name="language_changed_message">Bahasa telah diubah ke %1$s.\n\nMulai ulang aplikasi sekarang untuk menerapkan perubahan?</string>
+
+    <!-- Filter -->
+    <string name="filter_label">Filter</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_installed">Terpasang</string>
+    <string name="filter_not_installed">Belum terpasang</string>
+    <string name="filter_updates">Pembaruan</string>
+    <string name="no_apps_for_filter">Tidak ada aplikasi yang cocok dengan filter ini</string>
 </resources> 
