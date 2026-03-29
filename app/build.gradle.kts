@@ -428,6 +428,7 @@ dependencies {
 
     // Work Manager
     implementation(libs.androidx.work.runtime.ktx)
+    implementation("androidx.documentfile:documentfile:1.0.1")
 
     // Room Database
     implementation(libs.androidx.room.runtime)

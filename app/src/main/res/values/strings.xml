@@ -8,7 +8,10 @@
     <string name="compact_mode">Compact UI</string>
     <string name="debug_logging">Debug logging</string>
     <string name="download_path">APK download path</string>
-    <string name="download_path_hint">Leave empty to use default app folder</string>
+    <string name="download_path_hint">Tap "Choose folder" to open system file manager and grant access.</string>
+    <string name="download_path_not_set">Default folder will be used.</string>
+    <string name="choose_folder">Choose folder</string>
+    <string name="use_default_folder">Use default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_system">System</string>

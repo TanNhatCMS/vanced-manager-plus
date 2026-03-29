@@ -8,7 +8,10 @@
     <string name="compact_mode">Giao diện thu gọn</string>
     <string name="debug_logging">Ghi log debug</string>
     <string name="download_path">Đường dẫn lưu APK</string>
-    <string name="download_path_hint">Để trống để dùng thư mục mặc định của ứng dụng</string>
+    <string name="download_path_hint">Nhấn "Chọn thư mục" để mở trình quản lý file hệ thống và cấp quyền.</string>
+    <string name="download_path_not_set">Sẽ dùng thư mục mặc định.</string>
+    <string name="choose_folder">Chọn thư mục</string>
+    <string name="use_default_folder">Dùng mặc định</string>
     <string name="theme_light">Sáng</string>
     <string name="theme_dark">Tối</string>
     <string name="theme_system">Theo hệ thống</string>

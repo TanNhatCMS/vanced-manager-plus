@@ -137,6 +137,17 @@ fun MainScreen(
                 Spacer(modifier = Modifier.width(16.dp))
                 FloatingActionButton(
                     onClick = {
+                        viewModel.handleEvent(AppEvent.ShowLogsDialog)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Code,
+                        contentDescription = "View logs"
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                FloatingActionButton(
+                    onClick = {
                         viewModel.handleEvent(AppEvent.RefreshApps)
                     }
                 ) {
@@ -198,8 +209,7 @@ fun MainScreen(
                                 config = dialogState.config,
                                 onSave = dialogState.onSave,
                                 onCancel = dialogState.onCancel,
-                                onCompactModeChange = { },
-                                onViewLogs = dialogState.onViewLogs
+                                onCompactModeChange = { }
                             )
                         }
                         is DialogState.Logs -> {
@@ -251,8 +261,7 @@ fun MainScreen(
                                 config = dialogState.config,
                                 onSave = dialogState.onSave,
                                 onCancel = dialogState.onCancel,
-                                onCompactModeChange = { },
-                                onViewLogs = dialogState.onViewLogs
+                                onCompactModeChange = { }
                             )
                         }
                         is DialogState.Logs -> {

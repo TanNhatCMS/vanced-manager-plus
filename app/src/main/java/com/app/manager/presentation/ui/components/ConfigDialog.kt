@@ -1,5 +1,8 @@
 package com.app.manager.presentation.ui.components
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,9 +40,10 @@ fun ConfigDialog(
     config: AppConfig,
     onSave: (AppConfig) -> Unit,
     onCancel: () -> Unit,
-    onCompactModeChange: (Boolean) -> Unit = {},
-    onViewLogs: () -> Unit = {}
+    onCompactModeChange: (Boolean) -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     // Initialize state with current config values to ensure they display properly
     var selectedThemeMode by remember(config) { mutableStateOf(config.themeMode) }
     var selectedLanguage by remember(config) { mutableStateOf(config.language) }
@@ -53,6 +58,15 @@ fun ConfigDialog(
     val isThemeHeaderFocused by themeCollapseInteraction.collectIsFocusedAsState()
     val langCollapseInteraction = remember { MutableInteractionSource() }
     val isLangHeaderFocused by langCollapseInteraction.collectIsFocusedAsState()
+    val pickFolderLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(uri, flags)
+            }
+            downloadPath = uri.toString()
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onCancel,
@@ -437,23 +451,37 @@ fun ConfigDialog(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    OutlinedTextField(
-                        value = downloadPath,
-                        onValueChange = { downloadPath = it },
-                        singleLine = true,
+                    Text(
+                        text = if (downloadPath.isBlank()) stringResource(R.string.download_path_not_set) else downloadPath,
+                        style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = {
-                            Text(stringResource(R.string.download_path_hint))
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = { pickFolderLauncher.launch(null) },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.choose_folder))
                         }
+                        OutlinedButton(
+                            onClick = { downloadPath = "" },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.use_default_folder))
+                        }
+                    }
+                    Text(
+                        text = stringResource(R.string.download_path_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
-                TextButton(
-                    onClick = onViewLogs,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = stringResource(R.string.view_logs))
-                }
             }
         },
         confirmButton = {

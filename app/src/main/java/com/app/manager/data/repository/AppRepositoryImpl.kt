@@ -9,8 +9,10 @@ import com.app.manager.domain.model.AppDownload
 import com.app.manager.domain.model.AppStatus
 import com.app.manager.domain.model.RevancedApp
 import com.app.manager.domain.repository.AppRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -55,7 +57,7 @@ class AppRepositoryImpl @Inject constructor(
                     emit(Result.Error(error))
                 }
             }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getAppsFromCacheImmediately(): Flow<Result<List<RevancedApp>>> = flow {
         if (cachedApps.isEmpty()) {
@@ -63,7 +65,7 @@ class AppRepositoryImpl @Inject constructor(
         } else {
             emit(Result.Success(cachedApps))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun backgroundRefreshApps(): Flow<Result<List<RevancedApp>>> = flow {
         emit(Result.Loading)
@@ -79,7 +81,7 @@ class AppRepositoryImpl @Inject constructor(
                     emit(Result.Error(error))
                 }
             }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getUpdatedApps(oldApps: List<RevancedApp>, newApps: List<RevancedApp>): List<RevancedApp> {
         val oldMap = oldApps.associateBy { it.packageName }

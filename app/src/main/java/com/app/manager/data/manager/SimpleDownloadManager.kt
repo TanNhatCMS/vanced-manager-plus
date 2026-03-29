@@ -2,8 +2,10 @@ package com.app.manager.data.manager
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import androidx.documentfile.provider.DocumentFile
 import com.app.manager.core.di.NetworkModule.DownloadClient
 import com.app.manager.data.local.preferences.PreferencesManager
 import com.app.manager.domain.model.AppDownload
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.IOException
+import java.io.FileInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.ConcurrentHashMap
@@ -37,8 +40,8 @@ class SimpleDownloadManager @Inject constructor(
 
     fun downloadApp(packageName: String, downloadUrl: String): Flow<AppDownload> = flow {
         val configuredPath = runCatching { preferencesManager.getAppConfig().downloadPath }.getOrDefault("")
-        val downloadsDir = resolveDownloadDirectory(configuredPath)
-        val outputFile = File(downloadsDir, "$packageName.apk")
+        val internalDir = File(context.cacheDir, "downloads").apply { mkdirs() }
+        val outputFile = File(internalDir, "$packageName.apk")
 
         val request = Request.Builder().url(downloadUrl).build()
         val call = okHttpClient.newCall(request)
@@ -87,6 +90,11 @@ class SimpleDownloadManager @Inject constructor(
         activeDownloads[packageName] = completed
         emit(completed)
 
+        // Export a copy to user-configured folder (filesystem path or SAF tree URI).
+        runCatching {
+            exportDownloadedApk(outputFile, configuredPath, packageName)
+        }
+
         val completedIntent = Intent(DownloadService.ACTION_DOWNLOAD_COMPLETE).apply {
             putExtra(DownloadService.EXTRA_PACKAGE_NAME, packageName)
             putExtra(DownloadService.EXTRA_FILE_PATH, outputFile.absolutePath)
@@ -116,6 +124,32 @@ class SimpleDownloadManager @Inject constructor(
         }
 
         return File(context.cacheDir, "downloads").apply { mkdirs() }
+    }
+
+    private fun exportDownloadedApk(sourceFile: File, configuredPath: String, packageName: String) {
+        if (configuredPath.startsWith("content://")) {
+            exportToTreeUri(sourceFile, configuredPath, "$packageName.apk")
+            return
+        }
+
+        val exportDir = resolveDownloadDirectory(configuredPath)
+        val target = File(exportDir, "$packageName.apk")
+        sourceFile.copyTo(target, overwrite = true)
+    }
+
+    private fun exportToTreeUri(sourceFile: File, treeUriString: String, fileName: String) {
+        val treeUri = Uri.parse(treeUriString)
+        val tree = DocumentFile.fromTreeUri(context, treeUri) ?: return
+        if (!tree.canWrite()) return
+
+        tree.findFile(fileName)?.delete()
+        val target = tree.createFile("application/vnd.android.package-archive", fileName) ?: return
+
+        context.contentResolver.openOutputStream(target.uri)?.use { output ->
+            FileInputStream(sourceFile).use { input ->
+                input.copyTo(output)
+            }
+        }
     }
 
     private fun canWriteSharedStorage(): Boolean {

@@ -75,8 +75,7 @@ sealed class DialogState {
     data class Configuration(
         val config: AppConfig,
         val onSave: (AppConfig) -> Unit,
-        val onCancel: () -> Unit,
-        val onViewLogs: () -> Unit
+        val onCancel: () -> Unit
     ) : DialogState()
 
     data class Logs(

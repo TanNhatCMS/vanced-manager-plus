@@ -1652,18 +1652,39 @@ class AppBloc @Inject constructor(
 
     private fun logEvent(event: AppEvent) {
         val detail = when (event) {
+            AppEvent.LoadApps -> "LoadApps"
+            AppEvent.RefreshApps -> "RefreshApps"
+            AppEvent.LoadAppsFromCacheFirst -> "LoadAppsFromCacheFirst"
+            AppEvent.BackgroundRefreshApps -> "BackgroundRefreshApps"
+            is AppEvent.UpdateSingleApp -> "UpdateSingleApp ${event.app.packageName}"
             is AppEvent.DownloadApp -> "DownloadApp ${event.packageName}"
             is AppEvent.InstallApp -> "InstallApp ${event.packageName}"
             is AppEvent.UninstallApp -> "UninstallApp ${event.packageName}"
+            is AppEvent.ShowReinstallConfirmation -> "ShowReinstallConfirmation ${event.packageName}"
             is AppEvent.ReinstallApp -> "ReinstallApp ${event.packageName}"
             is AppEvent.OpenApp -> "OpenApp ${event.packageName}"
             is AppEvent.SearchApps -> "SearchApps '${event.query}'"
+            AppEvent.ClearSearch -> "ClearSearch"
             is AppEvent.SetFilter -> "SetFilter ${event.filter}"
             is AppEvent.SaveConfiguration -> "SaveConfiguration theme=${event.config.themeMode}, language=${event.config.language.code}, compact=${event.config.compactMode}, debug=${event.config.debugLogging}, path=${event.config.downloadPath}"
+            is AppEvent.UpdateCompactMode -> "UpdateCompactMode ${event.enabled}"
+            AppEvent.LoadConfiguration -> "LoadConfiguration"
             is AppEvent.UpdateAppProgress -> "UpdateAppProgress ${event.packageName} ${(event.progress * 100).toInt()}%"
             is AppEvent.UpdateAppStatus -> "UpdateAppStatus ${event.packageName} -> ${event.status}"
             is AppEvent.ShowError -> "ShowError ${event.message}"
-            else -> event::class.simpleName ?: "UnknownEvent"
+            is AppEvent.RetryInstallation -> "RetryInstallation ${event.packageName} uninstallFirst=${event.shouldUninstallFirst}"
+            is AppEvent.CancelDownload -> "CancelDownload ${event.packageName}"
+            is AppEvent.ConfirmUninstallBeforeReinstall -> "ConfirmUninstallBeforeReinstall ${event.packageName}"
+            is AppEvent.ShowConfirmationDialog -> "ShowConfirmationDialog ${event.title}"
+            AppEvent.DismissDialog -> "DismissDialog"
+            is AppEvent.DismissDialogAndUpdateStatus -> "DismissDialogAndUpdateStatus ${event.packageName} -> ${event.status}"
+            is AppEvent.DownloadCompleted -> "DownloadCompleted ${event.packageName}"
+            is AppEvent.DownloadFailed -> "DownloadFailed ${event.packageName}"
+            is AppEvent.InstallationCompleted -> "InstallationCompleted ${event.packageName} success=${event.success}"
+            is AppEvent.AutoInstallAllCompleted -> "AutoInstallAllCompleted success=${event.completedPackages.size} failed=${event.failedPackages.size}"
+            AppEvent.ShowConfigDialog -> "ShowConfigDialog"
+            AppEvent.ShowLogsDialog -> "ShowLogsDialog"
+            AppEvent.ClearLogs -> "ClearLogs"
         }
         addActionLog("EVENT", detail)
     }
@@ -1756,9 +1777,12 @@ class AppBloc @Inject constructor(
      * Get download path for a package
      */
     private fun getDownloadPath(packageName: String): String? {
-        val downloadDir = File(context.getExternalFilesDir(null), "downloads")
-        val apkFile = File(downloadDir, "$packageName.apk")
-        return if (apkFile.exists()) apkFile.absolutePath else null
+        val candidates = listOf(
+            File(File(context.cacheDir, "downloads"), "$packageName.apk"),
+            File(File(context.getExternalFilesDir(null), "downloads"), "$packageName.apk"),
+            File(File(context.getExternalFilesDir(null), "AppManager"), "$packageName.apk")
+        )
+        return candidates.firstOrNull { it.exists() }?.absolutePath
     }
 
     /**
@@ -1827,8 +1851,7 @@ class AppBloc @Inject constructor(
         val dialogState = DialogState.Configuration(
             config = config,
             onSave = { newConfig -> handleEvent(AppEvent.SaveConfiguration(newConfig)) },
-            onCancel = { handleEvent(AppEvent.DismissDialog) },
-            onViewLogs = { handleEvent(AppEvent.ShowLogsDialog) }
+            onCancel = { handleEvent(AppEvent.DismissDialog) }
         )
         
         val currentState = _state.value

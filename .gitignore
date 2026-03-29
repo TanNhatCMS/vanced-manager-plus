@@ -17,3 +17,5 @@ local.properties
 revanced-keystore.jks
 *.sample.txt
 .kotlin
+app/release.keystore
+keystore.properties
