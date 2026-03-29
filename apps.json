@@ -8,7 +8,7 @@
       "description": "App Manager Plus v1.0.0 by TanNhatCMS(KietNT)",
       "iconUrl": "https://avatars.githubusercontent.com/u/101597779?s=48&v=4",
       "downloadUrl": "https://github.com/TanNhatCMS/app-manager-plus/releases/download/1.0.0/App_Manager_Plus-v1.0.0.apk",
-      "requiresMicroG": true,
+      "requiresMicroG": false,
       "index": 1
     },
     {
