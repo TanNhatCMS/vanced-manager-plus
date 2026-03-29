@@ -46,7 +46,7 @@ jobs:
   build-release:
     name: Build Release APK
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_release && secrets.KEYSTORE_B64 != '' && secrets.KEYSTORE_PASSWORD != '' && secrets.KEYSTORE_ENTRY_ALIAS != '' && secrets.KEYSTORE_ENTRY_PASSWORD != '' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_release }}
 
     steps:
       - name: Checkout sources
@@ -62,6 +62,19 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+      
+      - name: Validate signing secrets
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_ENTRY_ALIAS: ${{ secrets.KEYSTORE_ENTRY_ALIAS }}
+          KEYSTORE_ENTRY_PASSWORD: ${{ secrets.KEYSTORE_ENTRY_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_B64" || (echo "Missing KEYSTORE_B64" && exit 1)
+          test -n "$KEYSTORE_PASSWORD" || (echo "Missing KEYSTORE_PASSWORD" && exit 1)
+          test -n "$KEYSTORE_ENTRY_ALIAS" || (echo "Missing KEYSTORE_ENTRY_ALIAS" && exit 1)
+          test -n "$KEYSTORE_ENTRY_PASSWORD" || (echo "Missing KEYSTORE_ENTRY_PASSWORD" && exit 1)
 
       - name: Prepare signing files
         shell: bash
