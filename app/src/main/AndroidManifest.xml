@@ -46,7 +46,7 @@
 
 
     <application
-        android:name=".RevancedManagerApplication"
+        android:name="com.revanced.net.revancedmanager.RevancedManagerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -77,7 +77,7 @@
 
         <!-- Download Service -->
         <service
-            android:name=".data.manager.DownloadService"
+            android:name="com.revanced.net.revancedmanager.data.manager.DownloadService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
