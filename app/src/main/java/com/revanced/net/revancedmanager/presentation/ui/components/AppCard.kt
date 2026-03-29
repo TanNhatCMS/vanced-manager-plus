@@ -49,7 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.revanced.net.revancedmanager.R
+import com.app.manager.R
 import com.revanced.net.revancedmanager.domain.model.AppStatus
 import com.revanced.net.revancedmanager.domain.model.RevancedApp
 import com.revanced.net.revancedmanager.presentation.ui.theme.downloadColor
@@ -474,3 +474,4 @@ private fun CompactActionButton(
         )
     }
 }
+

@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.revanced.net.revancedmanager.R
+import com.app.manager.R
 import com.revanced.net.revancedmanager.domain.model.AppConfig
 import com.revanced.net.revancedmanager.domain.model.Language
 import com.revanced.net.revancedmanager.domain.model.ThemeMode
@@ -500,3 +500,4 @@ private fun LanguageItem(
         )
     }
 }
+

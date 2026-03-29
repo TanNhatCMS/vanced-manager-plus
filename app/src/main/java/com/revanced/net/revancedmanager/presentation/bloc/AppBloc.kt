@@ -12,7 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.revanced.net.revancedmanager.R
+import com.app.manager.R
 import com.revanced.net.revancedmanager.core.common.LocaleHelper
 import com.revanced.net.revancedmanager.core.common.Result
 import com.revanced.net.revancedmanager.core.common.StringProvider
@@ -2063,3 +2063,4 @@ class AppBloc @Inject constructor(
     }
     
 }
+

@@ -67,7 +67,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.revanced.net.revancedmanager.R
+import com.app.manager.R
 import com.revanced.net.revancedmanager.presentation.bloc.AppBloc
 import com.revanced.net.revancedmanager.presentation.bloc.AppEvent
 import com.revanced.net.revancedmanager.presentation.bloc.AppFilterOption
@@ -757,3 +757,4 @@ private fun SearchAndFilterBar(
         }
     }
 }
+
